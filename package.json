@@ -26,11 +26,17 @@
   },
   "dependencies": {
     "browser-split": "0.0.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "cross-env": "^5.2.0",
     "error": "^4.3.0",
     "ev-store": "^7.0.0",
+    "extract-text-webpack-plugin": "^3.0.2",
     "global": "^4.3.0",
+    "html-webpack-plugin": "^3.2.0",
     "is-object": "^1.0.1",
     "next-tick": "^0.2.2",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.7",
     "x-is-array": "0.1.0",
     "x-is-string": "0.1.0"
   },
@@ -59,7 +65,8 @@
     "release": "npm run release-patch",
     "release-patch": "git checkout master && npm version patch && git push origin master --tags && npm publish",
     "release-minor": "git checkout master && npm version minor && git push origin master --tags && npm publish",
-    "release-major": "git checkout master && npm version major && git push origin master --tags && npm publish"
+    "release-major": "git checkout master && npm version major && git push origin master --tags && npm publish",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server"
   },
   "testling": {
     "files": "test/*.js",
