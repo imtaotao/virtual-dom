@@ -410,6 +410,8 @@ function reorder(aChildren, bChildren) {
     var inserts = []
     var simulateItem
 
+    console.log(bChildren, simulateItem, bKeys);
+
     for (var k = 0; k < bChildren.length;) {
         // wantedItem 为没有排序的节点，simulateItem为依据排过序的节点
         var wantedItem = bChildren[k]
@@ -427,18 +429,30 @@ function reorder(aChildren, bChildren) {
         // simulateItem 可能为空字符或 undefined
         // 如果 simulateItem key 与 wantedItem 不能对应，说明要么是需要 remove 的要么是 insert 的
         // 否则如果 key 一致，代表他们俩是在相同的位置上（重新排序后还是在原来的位置），不需要操作它
+        // debugger
+        console.log(wantedItem, simulateItem);
         if (!simulateItem || simulateItem.key !== wantedItem.key) {
+            // 这里好像是通过 key 进行对比，如果没有当前的 simulateItem的 key 与当前的 wantedItem key 不等
+            // 而且与 simulateItem.key 在 bChildren 中所在的位置也不在下一个 wantedItem 中相等（这里加 1 是因为下次循环，
+            // 我们就相等了，记住，此时的 k++ 了，而 simulateIndex 还没++）就代表我们需要开始进行删除（移动），因为和原始坐标（bChildre）
+            // 不一致, 可不就是要移动了吗。从哪里删除 from 到哪里插入 to
+            // 代表移动 from - to （想象一个东西再某一个地方消失又从另一个地方出现，同时又记录这两地的坐标，是不是就是移动了）
+            // 还是很巧妙的
             // if we need a key in this position...
-            // 如果 wantedItem 没有 key，我们就需要判断 simulateItem
             if (wantedItem.key) {
                 // 如果相应的 simulateItem 也存在 key
                 if (simulateItem && simulateItem.key) {
                     // if an insert doesn't put this key in place, it needs to move
                     // 如果插入没有将此键放置到位，则需要移动
+                    // + 1 的原因是每次开始移动都要 remove，simulate 减少的也是 1 个元素
+                    console.log(bKeys[simulateItem.key], simulateItem.key, i + 1);
                     if (bKeys[simulateItem.key] !== k + 1) {
+                        // remove 可以理解为开始移动，记录初始坐标
                         removes.push(remove(simulate, simulateIndex, simulateItem.key))
                         simulateItem = simulate[simulateIndex]
                         // if the remove didn't put the wanted item in place, we need to insert it
+                        // 如果删除没有把想要的 元素 放在适当的位置，我们需要插入它
+                        // 意思是此处还是不相等，代表此处还是缺一位 和 wantedItem 一样 key 的 sumulateItem
                         if (!simulateItem || simulateItem.key !== wantedItem.key) {
                             inserts.push({key: wantedItem.key, to: k})
                         }
@@ -447,10 +461,15 @@ function reorder(aChildren, bChildren) {
                             simulateIndex++
                         }
                     }
+                    // 如果等于下一位，代表 simulateItem 当前的这里本来应该和 wantendItem 一样 key 的元素，
+                    // 只不过前面被删除掉了，所以错了一位，此时我们发现前面被删除的元素应该出现的地方，所有我们要 inserts
+                    // 记录下坐标，这样就完成了一次 move
+                    // 所以我们认为只要相等就代表此处缺一个 sumulateItem
                     else {
                         inserts.push({key: wantedItem.key, to: k})
                     }
                 }
+                // 如果没有 simulateItem 或 key
                 else {
                     inserts.push({key: wantedItem.key, to: k})
                 }
@@ -459,16 +478,23 @@ function reorder(aChildren, bChildren) {
             // a key in simulate has no matching wanted key, remove it
             // 如果 wantedItem 中没有 key，但是 simulateItem 中有，我们就需要删除这个元素，因为这个元素肯定是旧的 aChildren 中的
             // 因为 wantedItem 代表最新的 vnodeTree，我们不能凭空把 simulateItem 给增加到真实的 dom 中
-            // 如果 simulateItem 为空，我们就不需要管
+            // 删掉当前的 simulateItem 后拿到下一个 simulateItem 继续进入循环
             else if (simulateItem && simulateItem.key) {
                 removes.push(remove(simulate, simulateIndex, simulateItem.key))
             }
+
+        // 到这里我们发现如果走到了 else if 或者都没有进入这个俩判断分支，那么会进入死循环，其实不然
+        // 当我们进入第二次循环，会重新判断 simulateItem.key 和 wantedItem.key，
+        // 因为我们直到我们判断完所有 key 不等的情况
+        // 但是我们任务 !simulateItem 和 !wantedItem.key 不会同时出现，不然真的会进入死循环🤣
         }
         else {
+            // 如果 simulateItem.key 和 wantedItem.key 相等，那么
             simulateIndex++
             k++
         }
     }
+    console.log(inserts, removes);
 
     // remove all the remaining nodes from simulate
     while(simulateIndex < simulate.length) {

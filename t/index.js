@@ -11,7 +11,7 @@ function children (arr) {
     })
 }
 
-function render(arr)  {
+function render(arr, is)  {
     return h('div', {
         style: {
             textAlign: 'center',
@@ -20,13 +20,13 @@ function render(arr)  {
             width: (100 + count) + 'px',
             height: (100 + count) + 'px'
         }
-    }, children(arr));
+    }, !is ? children(arr) : ['', '', '', '']);
 }
 
 // 2: Initialise the document
 var count = 0;      // We need some app data. Here we just store a count.
 
-var tree = render([1, 2, 3]);               // We need an initial tree
+var tree = render([1, null, 2, 4, 3]);               // We need an initial tree
 var rootNode = createElement(tree);     // Create an initial root DOM node ...
 document.body.appendChild(rootNode);    // ... and it should be in the document
 
@@ -34,7 +34,7 @@ document.body.appendChild(rootNode);    // ... and it should be in the document
 setTimeout(function () {
       count++;
 
-      var newTree = render([1, 3, 4]);
+      var newTree = render([1, null, 'nulll', 3, 4]);
       var patches = diff(tree, newTree);
       rootNode = patch(rootNode, patches);
       tree = newTree;
