@@ -16,8 +16,9 @@ const bChildren = [
   {key: '_5'},
   {key: '_6'},
 ]
+// reorder(aChildren, bChildren)
 
-function diff (aChildren, bChildren) {
+export function reorder (aChildren, bChildren) {
   const bChildIndex = keyIndex(bChildren)
   const bKeys = bChildIndex.keys
   const bFree = bChildIndex.free
@@ -202,8 +203,6 @@ function diff (aChildren, bChildren) {
     }
   }
 }
-
-diff(aChildren, bChildren)
 
 function remove(arr, index, key) {
   arr.splice(index, 1)

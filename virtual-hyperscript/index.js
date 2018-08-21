@@ -73,8 +73,6 @@ function h(tagName, properties, children) {
         // 需要递归添加 children
         addChild(children, childNodes, tag, props);
     }
-    console.log(childNodes);
-
 
     return new VNode(tag, props, childNodes, key, namespace);
 }

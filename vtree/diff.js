@@ -101,6 +101,7 @@ function walk(a, b, patch, index) {
         apply = appendPatch(apply, new VPatch(VPatch.WIDGET, a, b))
     }
 
+    console.log(apply, patch);
     if (apply) {
         // 此时的 index 并不是一定是按照 1 2 3 这样排序的
         // 因为有可能中间的某些 vnode 没有改变，跳过了
@@ -112,6 +113,7 @@ function walk(a, b, patch, index) {
         // 清除对 widget 节点的引用
         clearState(a, patch, index)
     }
+    console.log(patch);
 }
 
 function diffChildren(a, b, patch, apply, index) {
@@ -163,6 +165,7 @@ function diffChildren(a, b, patch, apply, index) {
         ))
     }
 
+    console.log(apply, 121);
     return apply
 }
 
@@ -410,8 +413,6 @@ function reorder(aChildren, bChildren) {
     var inserts = []
     var simulateItem
 
-    console.log(bChildren, simulateItem, bKeys);
-
     for (var k = 0; k < bChildren.length;) {
         // wantedItem 为没有排序的节点，simulateItem为依据排过序的节点
         var wantedItem = bChildren[k]
@@ -430,7 +431,7 @@ function reorder(aChildren, bChildren) {
         // 如果 simulateItem key 与 wantedItem 不能对应，说明要么是需要 remove 的要么是 insert 的
         // 否则如果 key 一致，代表他们俩是在相同的位置上（重新排序后还是在原来的位置），不需要操作它
         // debugger
-        console.log(wantedItem, simulateItem);
+
         if (!simulateItem || simulateItem.key !== wantedItem.key) {
             // 这里好像是通过 key 进行对比，如果没有当前的 simulateItem的 key 与当前的 wantedItem key 不等
             // 而且与 simulateItem.key 在 bChildren 中所在的位置也不在下一个 wantedItem 中相等（这里加 1 是因为下次循环，
@@ -494,7 +495,6 @@ function reorder(aChildren, bChildren) {
             k++
         }
     }
-    console.log(inserts, removes);
 
     // remove all the remaining nodes from simulate
     while(simulateIndex < simulate.length) {
