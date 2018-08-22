@@ -33,7 +33,6 @@ var count = 0;      // We need some app data. Here we just store a count.
 
 var tree = render([1, null, 2, 4, 3]);               // We need an initial tree
 var rootNode = createElement(tree);     // Create an initial root DOM node ...
-console.log(rootNode);
 document.body.appendChild(rootNode);    // ... and it should be in the document
 
 // 3: Wire up the update logic

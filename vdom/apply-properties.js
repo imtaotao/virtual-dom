@@ -50,7 +50,7 @@ function removeProperty(node, propName, propValue, previous) {
     }
 }
 
-function patchObject(node, props, previous, propName, propValue) {
+function patchObject(node, previous, propName, propValue) {
     var previousValue = previous ? previous[propName] : undefined
 
     // Set attributes
