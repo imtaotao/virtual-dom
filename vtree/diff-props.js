@@ -23,12 +23,12 @@ function diffProps(a, b) {
         } else if (isObject(aValue) && isObject(bValue)) {
             // 如果 aValue 和 bValue 是引用类型，我们就判断是否是同一个构造函数的实例
             if (getPrototype(bValue) !== getPrototype(aValue)) {
-                diff = diff || {}
                 // 如果不是，那么 bValue 就是新的是实例，需要添加到 diff
+                diff = diff || {}
                 diff[aKey] = bValue
             } else if (isHook(bValue)) {
-                 diff = diff || {}
-                 diff[aKey] = bValue
+                diff = diff || {}
+                diff[aKey] = bValue
             } else {
                 // 如果是同一个构造函数的实例，我们再 diff
                 // 但这种情况还是不能预防循环引用的问题

@@ -1,4 +1,4 @@
-import { version } from './typeof-vnode'
+import version from './version'
 
 VirtualPatch.NONE = 0 // 没有变化
 VirtualPatch.VTEXT = 1 // vtext 的变化

@@ -1,13 +1,13 @@
-export const version = '2'
+import version from './version'
 
-export function isVirtualNode(x) {
+export function isVNode (x) {
   return x && x.type === "VirtualNode" && x.version === version
 }
 
-export function isVirtualText(x) {
+export function isVText (x) {
   return x && x.type === "VirtualText" && x.version === version
 }
 
-export function isWidget(w) {
+export function isWidget (w) {
   return w && w.type === "Widget"
 }

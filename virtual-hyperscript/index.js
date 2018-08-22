@@ -52,7 +52,6 @@ function h(tagName, properties, children) {
         props.value !== undefined &&
         !isHook(props.value)
     ) {
-        // 对 input value 做处理，现在只允许为 string
         if (props.value !== null && typeof props.value !== 'string') {
             throw UnsupportedValueType({
                 expected: 'String',
@@ -63,6 +62,7 @@ function h(tagName, properties, children) {
                 }
             });
         }
+        // 此处只允许为 null 和 string
         props.value = softSetHook(props.value);
     }
 

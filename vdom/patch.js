@@ -7,16 +7,18 @@ var patchOp = require("./patch-op")
 module.exports = patch
 
 function patch(rootNode, patches, renderOptions) {
+    console.log(patches);
     renderOptions = renderOptions || {}
     renderOptions.patch = renderOptions.patch && renderOptions.patch !== patch
         ? renderOptions.patch
         : patchRecursive
     renderOptions.render = renderOptions.render || render
 
-    return renderOptions.patch(rootNode, patches, renderOptions)
+    // return renderOptions.patch(rootNode, patches, renderOptions)
 }
 
 function patchRecursive(rootNode, patches, renderOptions) {
+    console.log(rootNode, patches, renderOptions);
     var indices = patchIndices(patches)
 
     if (indices.length === 0) {

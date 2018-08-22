@@ -1,5 +1,6 @@
 import VPatch from '../vnode/vpatch'
 import diffProps from './diff-props'
+import { reorder } from './reorder';
 import { isVNode, isVText, isWidget } from '../vnode/typeof-vnode'
 
 export default function diff (a, b) {
@@ -33,10 +34,9 @@ function walk (a, b, patch, index) {
         apply = appendPatch(apply, new VPatch(VPatch.PROPS, a, propsPatch))
       }
 
-      // 继续 diff 子节点
-      diffChildren(a, b, patch, apply, index)
+      apply = diffChildren(a, b, patch, apply, index)
     } else {
-      // a 有可能是 text 和 widget
+      // a 有可能是 vnode、text 和 widget
       applyClear = true
       apply = appendPatch(apply, new VPatch(VPatch.vNode, a, b))
     }
@@ -72,15 +72,57 @@ function destroyWidgets (vNode, patch, index) {
     // 我们对 widget 节点进行 patch 主要是为了调用 destroy
     // 不然我们在直接替换节点的时候就把这个 widget 直接删掉了都不用管
     if (typeof vNode.destroy === 'function') {
-      patch
+      patch[index] = new VPatch(VPatch.REMOVE, vNode, null)
     }
   } else if (isVNode(vNode) && vNode.hasWidgets) {
+    const children = vNode.children
+    for (let i = 0, len = children.length; i < len; i++) {
+      const child = children[i]
+      index++
 
+      destroyWidgets(child, patch, index)
+
+      if (isVNode(child) && child.count) {
+        index += child.count
+      }
+    }
   }
 }
 
 function diffChildren(a, b, patch, apply, index) {
+  const aChildren = a.children
+  const orderedSet = reorder(aChildren, b.children)
+  const bChildren = orderedSet.children
 
+  const aLen = aChildren.length
+  const bLen = bChildren.length
+  const len = aLen > bLen ? aLen : bLen
+
+  for (let i = 0; i < len; i++) {
+    const leftNode = aChildren[i]
+    const rightNode = bChildren[i]
+    index++
+
+    if (leftNode) {
+      walk(leftNode, rightNode, patch, index)
+    } else {
+      // 如果没有 leftNode 但是有 rightNode，那就是新增的
+      if (rightNode) {
+        apply = appendPatch(apply, new VPatch(VPatch.INSERT, null, rightNode))
+      }
+    }
+
+    if (isVNode(leftNode) && leftNode.count) {
+      index += leftNode.count
+    }
+  }
+
+  // 如果我们有需要移动的子节点，我们在后续处理
+  if (orderedSet.moves) {
+    apply = appendPatch(apply, new VPatch(VPatch.ORDER, a, orderedSet.moves))
+  }
+
+  return apply
 }
 
 function appendPatch(apply, patch) {

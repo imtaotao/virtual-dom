@@ -101,7 +101,6 @@ function walk(a, b, patch, index) {
         apply = appendPatch(apply, new VPatch(VPatch.WIDGET, a, b))
     }
 
-    console.log(apply, patch);
     if (apply) {
         // 此时的 index 并不是一定是按照 1 2 3 这样排序的
         // 因为有可能中间的某些 vnode 没有改变，跳过了
@@ -113,7 +112,6 @@ function walk(a, b, patch, index) {
         // 清除对 widget 节点的引用
         clearState(a, patch, index)
     }
-    console.log(patch);
 }
 
 function diffChildren(a, b, patch, apply, index) {
@@ -127,8 +125,8 @@ function diffChildren(a, b, patch, apply, index) {
     var bLen = bChildren.length
     // 因为新的差异节点树（bChildren）有可能删掉了某些元素，也可能新加了很多元素
     // 所以此处的 len 为元素多了那颗数，毕竟我们需要全面的对所有差异元素进行 diff
-    var len = aLen > bLen ? aLen : bLen
 
+    var len = aLen > bLen ? aLen : bLen
     for (var i = 0; i < len; i++) {
         // 此处我们拿到左右俩节点
         var leftNode = aChildren[i]
@@ -136,7 +134,7 @@ function diffChildren(a, b, patch, apply, index) {
         index += 1
 
         // 如果左节点没有，而右边节点有，代表右边的节点是新增的，append apply
-        // 如果右边节点没有，有可能是 null，因为我们再排序的时候进行了
+        // 如果右边节点没有，有可能是 null，那么都是为空的节点，就不需要比较，在生产 element 的时候回过滤掉空
         if (!leftNode) {
             if (rightNode) {
                 // Excess nodes in b need to be added
@@ -165,7 +163,6 @@ function diffChildren(a, b, patch, apply, index) {
         ))
     }
 
-    console.log(apply, 121);
     return apply
 }
 
@@ -446,7 +443,6 @@ function reorder(aChildren, bChildren) {
                     // if an insert doesn't put this key in place, it needs to move
                     // 如果插入没有将此键放置到位，则需要移动
                     // + 1 的原因是每次开始移动都要 remove，simulate 减少的也是 1 个元素
-                    // console.log(bKeys[simulateItem.key], simulateItem.key, i + 1);
                     if (bKeys[simulateItem.key] !== k + 1) {
                         // remove 可以理解为开始移动，记录初始坐标
                         removes.push(remove(simulate, simulateIndex, simulateItem.key))
