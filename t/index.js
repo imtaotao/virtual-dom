@@ -4,10 +4,7 @@
 // var patch = vitrualDom.patch
 // var createElement = vitrualDom.create
 
-import h from './api/h'
-import diff from './vtree/diff'
-import patch from './vdom/patch'
-import createElement from './vdom/create-element'
+import v, { h, diff, patch, create } from './api.js'
 
 // 1: Create a function that declares what the DOM should look like
 function children (arr) {
@@ -32,7 +29,7 @@ function render(arr, is)  {
 var count = 0;      // We need some app data. Here we just store a count.
 
 var tree = render([1, null, 2, 4, 3]);               // We need an initial tree
-var rootNode = createElement(tree);     // Create an initial root DOM node ...
+var rootNode = create(tree);     // Create an initial root DOM node ...
 document.body.appendChild(rootNode);    // ... and it should be in the document
 
 // 3: Wire up the update logic

@@ -66,7 +66,6 @@ function patchObject (node, propName, propValue, previous) {
     ? ''
     : undefined
 
-  console.log(propValue, propName);
   for (let key in propValue) {
     const value = propValue[key]
 

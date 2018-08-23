@@ -1,6 +1,6 @@
-import VNode from '../vnode/vnode'
-import VText from '../vnode/vtext'
-import { isVNode, isVText, isWidget } from '../vnode/typeof-vnode'
+import VNode from './vnode/vnode'
+import VText from './vnode/vtext'
+import { isVNode, isVText, isWidget } from './vnode/typeof-vnode'
 
 export default function h (tagName, properties, children) {
   const childNodes = []
@@ -65,6 +65,7 @@ function parseTag (tagName, props) {
   if (!tagName) {
     return 'DIV'
   }
+
   return props.namespace ? tagName : tagName.toUpperCase()
 }
 
