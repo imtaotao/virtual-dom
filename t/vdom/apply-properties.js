@@ -38,7 +38,7 @@ function patchObject (node, propName, propValue, previous) {
   const previousValue = previous
     ? previous[propName]
     : undefined
-  
+
   if (propName === 'attributes') {
     for (let attrName in propValue) {
       const attrValue = propValue[attrName]
@@ -66,13 +66,14 @@ function patchObject (node, propName, propValue, previous) {
     ? ''
     : undefined
 
+  console.log(propValue, propName);
   for (let key in propValue) {
     const value = propValue[key]
 
     node[propName][key] = value === undefined
       ? replacer
-      : value 
-  } 
+      : value
+  }
 }
 
 function isObject(x) {

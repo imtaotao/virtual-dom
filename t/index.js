@@ -12,7 +12,7 @@ import createElement from './vdom/create-element'
 // 1: Create a function that declares what the DOM should look like
 function children (arr) {
     return arr.map((val, i) => {
-        return h('span', {key: '_' + val}, [1])
+        return h('span', {key: '_' + val}, [val])
     })
 }
 
@@ -37,12 +37,12 @@ document.body.appendChild(rootNode);    // ... and it should be in the document
 
 // 3: Wire up the update logic
 setTimeout(function () {
-      count++;
+        count++;
 
-      var newTree = render([1, null, 'nulll', 3, 4]);
-      var patches = diff(tree, newTree);
-      rootNode = patch(rootNode, patches);
-      tree = newTree;
+        var newTree = render([1, null, 'nulll', 3, 4]);
+        var patches = diff(tree, newTree);
+        rootNode = patch(rootNode, patches);
+        tree = newTree;
 }, 1000);
 
 // import h from './api/h'

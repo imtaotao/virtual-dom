@@ -52,6 +52,7 @@ function recurse(rootNode, tree, indices, nodes, rootIndex) {
 }
 
 // Binary search for an index in the interval [left, right]
+// 我们查找 indices (需要变动的位置) 在真实的 dom 节点中存不存在
 function indexInRange(indices, left, right) {
     if (indices.length === 0) {
         return false
@@ -63,21 +64,25 @@ function indexInRange(indices, left, right) {
     var currentItem
 
     while (minIndex <= maxIndex) {
+        // 每次从中间开始找，事半功倍
         currentIndex = ((maxIndex + minIndex) / 2) >> 0
         currentItem = indices[currentIndex]
 
         if (minIndex === maxIndex) {
+            // 代表在范围之内
             return currentItem >= left && currentItem <= right
         } else if (currentItem < left) {
+            // 小于，代表 currentItem 以前的都小于 left，我们往前找
             minIndex = currentIndex + 1
-        } else  if (currentItem > right) {
+        } else if (currentItem > right) {
+            // 我们往后招
             maxIndex = currentIndex - 1
         } else {
             return true
         }
     }
 
-    return false;
+    return false
 }
 
 function ascending(a, b) {

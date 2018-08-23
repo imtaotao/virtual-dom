@@ -117,7 +117,7 @@ function diffChildren(a, b, patch, apply, index) {
     }
   }
 
-  // 如果我们有需要移动的子节点，我们在后续处理
+  // 如果我们有需要移动的子节点，我们放在最后处理，等子节点处理后再进行排序移动等
   if (orderedSet.moves) {
     apply = appendPatch(apply, new VPatch(VPatch.ORDER, a, orderedSet.moves))
   }

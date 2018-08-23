@@ -1,11 +1,12 @@
 import applyProperties from './apply-properties'
 import { isVNode, isVText, isWidget } from '../vnode/typeof-vnode'
 
-export default function createElement (vnode, creatBeforeFun) {
+export default function createElement (vnode) {
   if (isWidget(vnode)) {
     const node = vnode.init()
-    if (creatBeforeFun) {
-      creatBeforeFun(node, vnode)
+
+    if (typeof vnode.elementCreated === 'function') {
+      vnode.elementCreated(node, vnode)
     }
 
     return node
@@ -25,15 +26,15 @@ export default function createElement (vnode, creatBeforeFun) {
   applyProperties(node, properties)
 
   for (let i = 0, len = children.length; i < len; i++) {
-    const childNode = createElement(children[i], creatBeforeFun)
+    const childNode = createElement(children[i])
 
     if (childNode) {
       node.appendChild(childNode)
     }
   }
 
-  if (creatBeforeFun) {
-    creatBeforeFun(node, vnode)
+  if (typeof vnode.elementCreated === 'function') {
+    vnode.elementCreated(node, vnode)
   }
 
   return node

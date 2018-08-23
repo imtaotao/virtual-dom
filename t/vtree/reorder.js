@@ -103,6 +103,9 @@ export function reorder (aChildren, bChildren) {
   let simulateIndex = 0
   let simulateItem
 
+  // simulate 是 aChildren 和 bChildren 的集合，所以 bChildren 中有的 simulate 中一定存在这个元素
+  // 而 aChildren 中多余的我们都改为了 null，会过滤掉，所以最后的结果中，removes 中存在的的元素，inserts 中一定存在
+  // 反过来，removes 中可能存在 key 为 null 的情况
   for (let k = 0, len = bChildren.length; k < len;) {
     const wantedItem = bChildren[k]
     simulateItem = simulate[simulateIndex]
